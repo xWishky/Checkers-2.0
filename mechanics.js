@@ -1,27 +1,27 @@
 function makeMove(coords_to_move_to, coords_to_move_from) {
 
     for (let i = 0; i < all_removable.length; i++) {
-      board_arr[all_removable[i][1]][all_removable[i][0]] = ""
+      board_arr[all_removable[i][1]][all_removable[i][0]] = Pieces.Empty
     }
     
     let prev_value = board_arr[coords_to_move_from[1]][coords_to_move_from[0]]
-    board_arr[coords_to_move_from[1]][coords_to_move_from[0]] = "";
+    board_arr[coords_to_move_from[1]][coords_to_move_from[0]] = Pieces.Empty;
 
-    if (prev_value == "WD" || prev_value == "BD") {
+    if (prev_value == Pieces.WhiteKing || prev_value == Pieces.BlackKing) {
 
-        board_arr[coords_to_move_to[1]][coords_to_move_to[0]] = (current_turn == 1) ? "BD" : "WD";
+        board_arr[coords_to_move_to[1]][coords_to_move_to[0]] = (current_turn == 1) ? Pieces.BlackKing : Pieces.WhiteKing;
 
     } else if (current_turn == 0 && coords_to_move_to[1] == 0) {
 
-        board_arr[coords_to_move_to[1]][coords_to_move_to[0]] = "WD"
+        board_arr[coords_to_move_to[1]][coords_to_move_to[0]] = Pieces.WhiteKing
     } 
     else if (current_turn == 1 && coords_to_move_to[1] == 7) {
         
-        board_arr[coords_to_move_to[1]][coords_to_move_to[0]] = "BD"
+        board_arr[coords_to_move_to[1]][coords_to_move_to[0]] = Pieces.BlackKing
 
     } else {
 
-        board_arr[coords_to_move_to[1]][coords_to_move_to[0]] = (current_turn == 1) ? "B" : "W";
+        board_arr[coords_to_move_to[1]][coords_to_move_to[0]] = (current_turn == 1) ? Pieces.Black : Pieces.White;
 
     }
   
@@ -45,24 +45,24 @@ function checkCaptures(y, x, isWhite, board, path = [], start_x, start_y, is_kin
         { dx: 1, dy: 1 }    // Backward-right
     ];
 
-    let opponent = isWhite === "W" ? ["B", "BD"] : ["W", "WD"];
-    let player = isWhite === "W" ? (is_king ? "WD" : "W") : (is_king ? "BD" : "B");
+    let opponent = isWhite === Pieces.White ? [Pieces.Black, Pieces.BlackKing] : [Pieces.White, Pieces.WhiteKing];
+    let player = isWhite === Pieces.White ? (is_king ? Pieces.WhiteKing : Pieces.White) : (is_king ? Pieces.BlackKing : Pieces.Black);
 
     let foundPath = false;
 
     for (const dir of directions) {
         try {
-            if (opponent.includes(board[y + dir.dy][x + dir.dx]) && board[y + (2 * dir.dy)][x + (2 * dir.dx)] === "") {
+            if (opponent.includes(board[y + dir.dy][x + dir.dx]) && board[y + (2 * dir.dy)][x + (2 * dir.dx)] === Pieces.Empty) {
                 foundPath = true;
                 let capturedPiece = board[y + dir.dy][x + dir.dx];
-                board[y + dir.dy][x + dir.dx] = "";
+                board[y + dir.dy][x + dir.dx] = Pieces.Empty;
                 board[y + (2 * dir.dy)][x + (2 * dir.dx)] = player;
 
                 const newPath = [...path, [x + (2 * dir.dx), y + (2 * dir.dy)]];
                 checkCaptures(y + (2 * dir.dy), x + (2 * dir.dx), isWhite, board, newPath, start_x, start_y, is_king);
 
                 board[y + dir.dy][x + dir.dx] = capturedPiece;
-                board[y + (2 * dir.dy)][x + (2 * dir.dx)] = "";
+                board[y + (2 * dir.dy)][x + (2 * dir.dx)] = Pieces.Empty;
             }
         } catch {
             continue;

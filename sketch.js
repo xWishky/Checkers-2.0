@@ -16,6 +16,14 @@ let all_paths_found = false;
 
 let all_removable = [];
 
+const Pieces = {
+  Black: "B",
+  White: "W",
+  BlackKing: "BD",
+  WhiteKing: "WD",
+  Empty: ""
+}
+
 
 function setup() {
 
@@ -37,8 +45,8 @@ function draw() {
     for (let i = 0; i < board_arr[0].length; i++) {
       for (let j = 0; j < board_arr[i].length; j++) {
 
-        let player = (current_turn == 0) ? "W" : "B"
-        let player_king = (current_turn == 0) ? "WD" : "BD"
+        let player = (current_turn == 0) ? Pieces.White : Pieces.Black
+        let player_king = (current_turn == 0) ? Pieces.WhiteKing : Pieces.BlackKing
 
         if (board_arr[i][j] == player) {
 
@@ -92,39 +100,39 @@ function draw() {
     try {
       // Every mouseclick we check for available moves and display those
       // This code will only run when there is no obligated capture to perform
-      if (board_arr[current_y_pos][current_x_pos] == "") {
+      if (board_arr[current_y_pos][current_x_pos] == Pieces.Empty) {
 
         selected_checker = []
         show_arr = []
       }
-      else if (board_arr[current_y_pos][current_x_pos] == "W" && current_turn == 0) {
+      else if (board_arr[current_y_pos][current_x_pos] == Pieces.White && current_turn == 0) {
 
         selected_checker = [current_x_pos, current_y_pos]
         show_arr = []
         
         // MAY USE THIS CODE ->
-        if (board_arr[current_y_pos - 1][current_x_pos - 1] == "") {
+        if (board_arr[current_y_pos - 1][current_x_pos - 1] == Pieces.Empty) {
           show_arr.push([current_x_pos - 1, current_y_pos - 1])
         }
-        if (board_arr[current_y_pos - 1][current_x_pos + 1] == "") {
+        if (board_arr[current_y_pos - 1][current_x_pos + 1] == Pieces.Empty) {
           show_arr.push([current_x_pos + 1, current_y_pos - 1])
         }
 
       } 
-      else if (board_arr[current_y_pos][current_x_pos] == "B" && current_turn == 1) {  
+      else if (board_arr[current_y_pos][current_x_pos] == Pieces.Black && current_turn == 1) {  
 
         selected_checker = [current_x_pos, current_y_pos]
         show_arr = []
 
         // MAY USE THIS CODE ->
-        if (board_arr[current_y_pos + 1][current_x_pos + 1] == "") {
+        if (board_arr[current_y_pos + 1][current_x_pos + 1] == Pieces.Empty) {
           show_arr.push([current_x_pos + 1, current_y_pos + 1])
         }
-        if (board_arr[current_y_pos + 1][current_x_pos - 1] == "") {
+        if (board_arr[current_y_pos + 1][current_x_pos - 1] == Pieces.Empty) {
           show_arr.push([current_x_pos - 1, current_y_pos + 1])
         }
       }
-      else if (board_arr[current_y_pos][current_x_pos] == "WD" && current_turn == 0) {
+      else if (board_arr[current_y_pos][current_x_pos] == Pieces.WhiteKing && current_turn == 0) {
         
         selected_checker = [current_x_pos, current_y_pos]
         show_arr = []
@@ -138,13 +146,13 @@ function draw() {
       
         // Handle left-side movements
         for (let k = 1; k <= current_x_pos; k++) {
-            if (!blocked.left_down && board_arr[current_y_pos + k][current_x_pos - k] == "") {
+            if (!blocked.left_down && board_arr[current_y_pos + k][current_x_pos - k] == Pieces.Empty) {
                 show_arr.push([current_x_pos - k, current_y_pos + k]);
             } else {
                 blocked.left_down = true;
             }
         
-            if (current_y_pos - k >= 0 && !blocked.left_up && board_arr[current_y_pos - k][current_x_pos - k] == "") {
+            if (current_y_pos - k >= 0 && !blocked.left_up && board_arr[current_y_pos - k][current_x_pos - k] == Pieces.Empty) {
                 show_arr.push([current_x_pos - k, current_y_pos - k]);
             } else {
                 blocked.left_up = true;
@@ -153,13 +161,13 @@ function draw() {
         
         // Handle right-side movements
         for (let k = 1; current_x_pos + k <= 7; k++) {
-            if (current_y_pos - k >= 0 && !blocked.right_up && board_arr[current_y_pos - k][current_x_pos + k] == "") {
+            if (current_y_pos - k >= 0 && !blocked.right_up && board_arr[current_y_pos - k][current_x_pos + k] == Pieces.Empty) {
                 show_arr.push([current_x_pos + k, current_y_pos - k]);
             } else {
                 blocked.right_up = true;
             }
         
-            if (!blocked.right_down && board_arr[current_y_pos + k][current_x_pos + k] == "") {
+            if (!blocked.right_down && board_arr[current_y_pos + k][current_x_pos + k] == Pieces.Empty) {
                 show_arr.push([current_x_pos + k, current_y_pos + k]);
             } else {
                 blocked.right_down = true;
@@ -167,7 +175,7 @@ function draw() {
         }
         
       }
-      else if (board_arr[current_y_pos][current_x_pos] == "BD" && current_turn == 1) {
+      else if (board_arr[current_y_pos][current_x_pos] == Pieces.BlackKing && current_turn == 1) {
 
         selected_checker = [current_x_pos, current_y_pos];
         show_arr = [];
@@ -182,14 +190,14 @@ function draw() {
         // Handle left-side movements
         for (let k = 1; k <= current_x_pos; k++) {
             // Check bounds and left_down
-            if ((current_y_pos + k < board_arr.length) && !blocked.left_down && (current_x_pos - k >= 0) && board_arr[current_y_pos + k][current_x_pos - k] == "") {
+            if ((current_y_pos + k < board_arr.length) && !blocked.left_down && (current_x_pos - k >= 0) && board_arr[current_y_pos + k][current_x_pos - k] == Pieces.Empty) {
                 show_arr.push([current_x_pos - k, current_y_pos + k]);
             } else {
                 blocked.left_down = true;
             }
     
             // Check bounds and left_up
-            if ((current_y_pos - k >= 0) && !blocked.left_up && (current_x_pos - k >= 0) && board_arr[current_y_pos - k][current_x_pos - k] == "") {
+            if ((current_y_pos - k >= 0) && !blocked.left_up && (current_x_pos - k >= 0) && board_arr[current_y_pos - k][current_x_pos - k] == Pieces.Empty) {
                 show_arr.push([current_x_pos - k, current_y_pos - k]);
             } else {
                 blocked.left_up = true;
@@ -199,14 +207,14 @@ function draw() {
         // Handle right-side movements
         for (let k = 1; current_x_pos + k <= 7; k++) {
             // Check bounds and right_up
-            if ((current_y_pos - k >= 0) && !blocked.right_up && (current_x_pos + k < board_arr.length) && board_arr[current_y_pos - k][current_x_pos + k] == "") {
+            if ((current_y_pos - k >= 0) && !blocked.right_up && (current_x_pos + k < board_arr.length) && board_arr[current_y_pos - k][current_x_pos + k] == Pieces.Empty) {
                 show_arr.push([current_x_pos + k, current_y_pos - k]);
             } else {
                 blocked.right_up = true;
             }
     
             // Check bounds and right_down
-            if ((current_y_pos + k < board_arr.length) && !blocked.right_down && (current_x_pos + k < board_arr.length) && board_arr[current_y_pos + k][current_x_pos + k] == "") {
+            if ((current_y_pos + k < board_arr.length) && !blocked.right_down && (current_x_pos + k < board_arr.length) && board_arr[current_y_pos + k][current_x_pos + k] == Pieces.Empty) {
                 show_arr.push([current_x_pos + k, current_y_pos + k]);
             } else {
                 blocked.right_down = true;

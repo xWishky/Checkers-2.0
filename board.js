@@ -5,15 +5,15 @@ function instantiateBoard() {
       let temp = []
       for (let j = 0; j < 8; j++) {
         if (((i + j) % 2 == 1) && black_amount !== 0) {
-          temp.push("B")
+          temp.push(Pieces.Black)
           black_amount--
         }
         else if (i >= 5 && ((i + j) % 2 == 1) && white_amount !== 0) {
-          temp.push("W")
+          temp.push(Pieces.White)
           white_amount--
         }
         else {
-          temp.push("")
+          temp.push(Pieces.Empty)
         }
       }
       board_arr.push(temp)
@@ -31,56 +31,64 @@ function createBoard() {
     }
   }
 }
+
+const Colors = {
+  BlackInner: "#1B1212",
+  BlackOuter: 15,
+  WhiteOuter: "#a7812f",
+  WhiteInner: "#c99340",
+  KingOutline: "#eb4034"
+}
   
 
 function spawnPieces() {
   for (let i = 0; i < 8; i++) {
     for (let j = 0; j < 8; j++) {
-      if (board_arr[j][i] == "B") {
+      if (board_arr[j][i] == Pieces.Black) {
         push()
-        fill(15)
+        fill(Colors.BlackOuter)
         stroke(0)
         strokeWeight(2)
         ellipse(i * 100 + 50, j * 100 + 50, 75)
         strokeWeight(0)
-        fill("#1B1212")
+        fill(Colors.BlackInner)
         ellipse(i * 100 + 50, j * 100 + 50, 50)
         pop()
       } 
-      else if (board_arr[j][i] == "BD") {
+      else if (board_arr[j][i] == Pieces.BlackKing) {
         push()
-        fill("#eb4034")
+        fill(Colors.KingOutline)
         ellipse(i * 100 + 50, j * 100 + 50, 85)
-        fill(15)
+        fill(Colors.BlackOuter)
         stroke(0)
         strokeWeight(2)
         ellipse(i * 100 + 50, j * 100 + 50, 75)
         strokeWeight(0)
-        fill("#1B1212")
+        fill(Colors.BlackInner)
         ellipse(i * 100 + 50, j * 100 + 50, 50)
         pop()
       }
-      else if (board_arr[j][i] == "W") {
+      else if (board_arr[j][i] == Pieces.White) {
         push()
-        fill("#a7812f")
+        fill(Colors.WhiteOuter)
         stroke(0)
         strokeWeight(2)
         ellipse(i * 100 + 50, j * 100 + 50, 75)
         strokeWeight(0)
-        fill("#c99340")
+        fill(Colors.WhiteInner)
         ellipse(i * 100 + 50, j * 100 + 50, 50)
         pop()
       } 
-      else if (board_arr[j][i] == "WD") {
+      else if (board_arr[j][i] == Pieces.WhiteKing) {
         push()
-        fill("#eb4034")
+        fill(Colors.KingOutline)
         ellipse(i * 100 + 50, j * 100 + 50, 85)
         stroke(0)
         strokeWeight(2)
-        fill("#a7812f")
+        fill(Colors.WhiteOuter)
         ellipse(i * 100 + 50, j * 100 + 50, 75)
         strokeWeight(0)
-        fill("#c99340")
+        fill(Colors.WhiteInner)
         ellipse(i * 100 + 50, j * 100 + 50, 50)
         pop()
       } 
@@ -122,10 +130,10 @@ function checkWin() {
 
   for (let i = 0; i < board_arr.length; i++) {
     for (let j = 0; j < board_arr[i].length; j++) {
-      if (board_arr[i][j] == "W" || board_arr[i][j] == "WD") {
+      if (board_arr[i][j] == Pieces.White || board_arr[i][j] == Pieces.WhiteKing) {
         white_amount--
       }
-      else if (board_arr[i][j] == "B" || board_arr[i][j] == "BD") {
+      else if (board_arr[i][j] == Pieces.Black || board_arr[i][j] == Pieces.BlackKing) {
         black_amount--
       }
     }
