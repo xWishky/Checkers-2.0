@@ -38,8 +38,9 @@ function draw() {
   background(220);
   createBoard();
   spawnPieces();
-  checkWin()
+  checkWin();
 
+  // If there aren't any capturing paths found, loop over all the pieces on the board to check for captures
   if (!all_paths_found) {
 
     for (let i = 0; i < board_arr[0].length; i++) {
@@ -62,6 +63,7 @@ function draw() {
 
   }
 
+  // Filter out all the paths with the maximum length since you have to take the longest capturing path
   if (all_paths.length >= 1) {
 
     let max_length = Math.max(...all_paths.map(arr => arr.length));
@@ -72,7 +74,7 @@ function draw() {
 
   }
 
-  showAvailableSpots(show_arr)
-  mouseHandler()
-  
+  showAvailableSpots(show_arr);
+  mouseHandler();
+
 }

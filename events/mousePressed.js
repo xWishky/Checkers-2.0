@@ -1,3 +1,5 @@
+
+// This function handles mouseClicks during the game
 function mouseHandler() {
 
     if (mouseIsPressed) {
