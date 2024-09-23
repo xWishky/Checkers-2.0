@@ -32,13 +32,13 @@ function createBoard() {
   }
 }
 
-const Colors = {
+const Colors = Object.freeze({
   BlackInner: "#1B1212",
   BlackOuter: 15,
   WhiteOuter: "#a7812f",
   WhiteInner: "#c99340",
   KingOutline: "#eb4034"
-}
+})
   
 
 function spawnPieces() {
@@ -124,24 +124,47 @@ function showAvailableSpots(to_show) {
 }
 
 
-function checkWin() {
+function checkWin(board) {
   let black_amount = 12
   let white_amount = 12
 
-  for (let i = 0; i < board_arr.length; i++) {
-    for (let j = 0; j < board_arr[i].length; j++) {
-      if (board_arr[i][j] == Pieces.White || board_arr[i][j] == Pieces.WhiteKing) {
+  let player = (current_turn == 0) ? Pieces.White : Pieces.Black
+  let move_direction = (current_turn == 0) ? -1 : +1
+  let has_move = 12;
+
+  // Loop over all the spaces on the board to count all the pieces of each player
+  // If there are no pieces of one color left, a winner is selected
+  for (let i = 0; i < board.length; i++) {
+    for (let j = 0; j < board[i].length; j++) {
+      if (board[i][j] == Pieces.White || board[i][j] == Pieces.WhiteKing) {
         white_amount--
       }
-      else if (board_arr[i][j] == Pieces.Black || board_arr[i][j] == Pieces.BlackKing) {
+      else if (board[i][j] == Pieces.Black || board[i][j] == Pieces.BlackKing) {
         black_amount--
+      }
+
+      // Get the amount of pieces owned by the current player that aren't able to move
+      if (board[i][j] == player) {
+        try {
+          if (board[i + move_direction][j + 1] == Pieces.Empty || board[i + move_direction][j - 1] == Pieces.Empty) {
+            has_move--
+          }
+        } catch {}
       }
     }
   }
 
+  // Return the current state of the game
   if (white_amount == 12) {
-    console.log("Black wins!")
-  } else if (black_amount == 12) {
-    console.log("White wins!")
+    return GameStates.BlackWin
+  } 
+  else if (black_amount == 12) {
+    return GameStates.WhiteWin
+  } 
+  else if (show_arr.length == 0 && has_move == 12) {
+    return GameStates.Stalemate
+  } 
+  else {
+    return GameStates.Ongoing
   }
 }
